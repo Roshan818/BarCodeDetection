@@ -133,7 +133,7 @@ def getContours(image):
 
 if __name__ == "__main__":
     # Take the image from user
-    image = r"BarCodeDetection/sample/allbarcode/IMG_20220303_173611.jpg"
+    image = r'BarCodeDetection/sample/allbarcode/IMG_20220303_175324.jpg'
     getContours(image)
     localized(image)
     BarcodeReader()
