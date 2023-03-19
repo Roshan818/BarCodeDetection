@@ -4,7 +4,7 @@ import numpy as np
 from pyzbar.pyzbar import decode
 
 # read the input image
-img = cv2.imread('BarCodeDetection/sample/allbarcode/IMG_20220303_175324.jpg')
+img = cv2.imread("BarCodeDetection/sample/allbarcode/IMG_20220303_173846.jpg")
 
 # convert the image to grayscale
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -25,19 +25,19 @@ for contour in contours:
     x, y, w, h = cv2.boundingRect(contour)
 
     # decode the barcode
-    barcode = decode(binary[y:y+h, x:x+w])
-    
+    barcode = decode(binary[y : y + h, x : x + w])
+
     # check if the barcode is readable
     if len(barcode) > 0:
         # store the barcode value
         barcode_values.append(barcode[0].data.decode())
         # draw a blue bounding box around the barcode
         bounding_box_colors.append((255, 0, 0))
-        cv2.rectangle(img, (x, y), (x+w, y+h), (255, 0, 0), 2)
-    # else:
-    #     # if the barcode is not readable, draw a yellow bounding box around it
-    #     bounding_box_colors.append((0, 255, 255))
-    #     cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 255), 2)
+        cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
+    else:
+        # if the barcode is not readable, draw a yellow bounding box around it
+        bounding_box_colors.append((0, 255, 255))
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 255), 2)
 
 # create a list of unique barcode values
 unique_barcodes = list(set(barcode_values))
@@ -45,16 +45,16 @@ unique_barcodes = list(set(barcode_values))
 # loop through the unique barcode values and count their occurrences
 for barcode in unique_barcodes:
     count = barcode_values.count(barcode)
-    print(f'{barcode}: {count}')
+    print(f"{barcode}: {count}")
 
 # loop through the contours again and draw bounding boxes around the items
-# for i, contour in enumerate(contours):
-#     if bounding_box_colors[i] != (255, 0, 0) and bounding_box_colors[i] != (0, 255, 255):
-#         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
-#     cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 0), 2)
+for i, contour in enumerate(contours):
+    if bounding_box_colors[i] != (255, 0, 0) and bounding_box_colors[i] != (0, 255, 255):
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 255), 2)
+    cv2.rectangle(img, (x, y), (x+w, y+h), (0, 0, 0), 2)
 
 # display the image
-img = cv2.resize(img, (512,512))
-cv2.imshow('output', img)
+img = cv2.resize(img, (512, 512), interpolation=cv2.INTER_AREA)
+cv2.imshow("output", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

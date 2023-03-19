@@ -2,20 +2,37 @@ import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 
+#TODO: add docstrings
+
 class ObjectDetector:
     def __init__(self, model_path, config_path, classes_path):
+        """
+        model_path: path to the model file
+        config_path: path to the config file
+        classes_path: path to the classes file
+        """
         self.net = cv2.dnn.readNet(model_path, config_path)
-        with open(classes_path, 'r') as f:
+        #TODO: error handling incase file not present
+        with open(classes_path, "r") as f:
             self.classes = [line.strip() for line in f.readlines()]
         self.layer_names = self.net.getLayerNames()
-        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        self.output_layers = [
+            self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()
+        ]
 
     def detect_objects(self, image):
+        """
+        image: image to detect objects in
+        returns: list of cropped images
+        """
+        #TODO: dont hardcode any values, make them configurable
         # get image dimensions
         height, width, channels = image.shape
 
         # perform YOLO object detection
-        blob = cv2.dnn.blobFromImage(image, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+        blob = cv2.dnn.blobFromImage(
+            image, 0.00392, (416, 416), (0, 0, 0), True, crop=False
+        )
         self.net.setInput(blob)
         outs = self.net.forward(self.output_layers)
 
@@ -37,7 +54,7 @@ class ObjectDetector:
                     y = int(center_y - h / 2)
 
                     # crop the image and append it to the list
-                    cropped_img = image[y:y+h, x:x+w]
+                    cropped_img = image[y : y + h, x : x + w]
                     cropped_images.append(cropped_img)
 
         return cropped_images
@@ -45,9 +62,16 @@ class ObjectDetector:
 
 class BarcodeScanner:
     def __init__(self):
+        """
+        barcode_scanner: instance of the BarcodeScanner class
+        """
         pass
 
     def detect_barcodes(self, images):
+        """
+        images: list of images to detect barcodes in
+        returns: list of barcode values
+        """
         # initialize list to store barcode values
         barcode_values = []
 
@@ -72,10 +96,19 @@ class BarcodeScanner:
 
 class GroceryScanner:
     def __init__(self, model_path, config_path, classes_path):
+        """
+        model_path: path to the model file
+        config_path: path to the config file
+        classes_path: path to the classes file
+        """
         self.object_detector = ObjectDetector(model_path, config_path, classes_path)
         self.barcode_scanner = BarcodeScanner()
 
     def scan_groceries(self, image):
+        """
+        image: image to detect objects and barcodes in
+        returns: dictionary of barcode values and their occurrences
+        """
         # detect objects in the image
         cropped_images = self.object_detector.detect_objects(image)
 

@@ -5,11 +5,11 @@ from pyzbar.pyzbar import decode
 import torch
 
 # load YOLOv5 object detection model
-model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
+model = torch.hub.load("ultralytics/yolov5", "yolov5s", pretrained=True)
 model.conf = 0.5  # set confidence threshold
 
 # read the input image
-img = cv2.imread('BarCodeDetection/sample/allbarcode/IMG_20220303_173846.jpg')
+img = cv2.imread("BarCodeDetection/sample/missing barcode/IMG_20220303_174028.jpg")
 
 # perform YOLOv5 object detection
 results = model(img)
@@ -44,11 +44,11 @@ unique_barcodes = list(set(barcode_values))
 # loop through the unique barcode values and count their occurrences
 for barcode in unique_barcodes:
     count = barcode_values.count(barcode)
-    print(f'{barcode}: {count}')
+    print(f"{barcode}: {count}")
 
 # display the cropped images and detected barcodes
 for i, cropped_img in enumerate(cropped_images):
-    cv2.imshow(f'cropped image {i}', cropped_img)
+    cv2.imshow(f"cropped image {i}", cropped_img)
     cv2.waitKey(0)
 
 # close all windows

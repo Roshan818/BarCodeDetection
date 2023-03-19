@@ -10,4 +10,4 @@ img = "BarCodeDetection/sample/missing and partial barcode/IMG_20220303_174744.j
 results = model(img)
 
 # Results
-results.print() 
+results.print()

@@ -2,17 +2,22 @@ import cv2
 import numpy as np
 from pyzbar.pyzbar import decode
 
+
 class ObjectDetector:
     def __init__(self, weights_path, config_path, class_names_path):
         self.net = cv2.dnn.readNet(weights_path, config_path)
-        with open(class_names_path, 'r') as f:
+        with open(class_names_path, "r") as f:
             self.classes = [line.strip() for line in f.readlines()]
         self.layer_names = self.net.getLayerNames()
-        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        self.output_layers = [
+            self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()
+        ]
 
     def detect_objects(self, img):
         height, width, channels = img.shape
-        blob = cv2.dnn.blobFromImage(img, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
+        blob = cv2.dnn.blobFromImage(
+            img, 0.00392, (416, 416), (0, 0, 0), True, crop=False
+        )
         self.net.setInput(blob)
         outs = self.net.forward(self.output_layers)
         class_ids = []
@@ -35,6 +40,7 @@ class ObjectDetector:
                     class_ids.append(class_id)
         return boxes, confidences, class_ids
 
+
 class BarcodeDetector:
     def __init__(self):
         pass
@@ -48,6 +54,7 @@ class BarcodeDetector:
         else:
             return None
 
+
 class GroceryScanner:
     def __init__(self, object_detector, barcode_detector):
         self.object_detector = object_detector
@@ -59,9 +66,9 @@ class GroceryScanner:
         barcode_values = []
         for i, box in enumerate(boxes):
             x, y, w, h = box
-            cropped_img = img[y:y+h, x:x+w]
+            cropped_img = img[y : y + h, x : x + w]
             cropped_images.append(cropped_img)
-            if class_ids[i] == 0: # check if the object is a barcode
+            if class_ids[i] == 0:  # check if the object is a barcode
                 barcode_value = self.barcode_detector.detect_barcodes(cropped_img)
                 if barcode_value is not None:
                     barcode_values.append(barcode_value)
@@ -79,6 +86,6 @@ class GroceryScanner:
     @staticmethod
     def draw_bbox(img, bbox, color, thickness):
         x, y, w, h = bbox
-        cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness)
+        cv2.rectangle(img, (x, y), (x + w, y + h), color, thickness)
 
     # def visualize_groceries(self, img, cropped_images, barcode_values):
