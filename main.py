@@ -1,21 +1,23 @@
 import cv2
-from barcode_scanner import BarcodeScanner
+from barcode_scanner import GroceryScanner
 
-# define the image file path
-image_path = "BarCodeDetection/sample/allbarcode/IMG_20220303_173846.jpg"
+def main():
+    # initialize the grocery scanner
+    model_path = 'yolov5s.pt'
+    config_path = 'path/to/config/file'
+    classes_path = 'path/to/classes/file'
+    grocery_scanner = GroceryScanner(model_path, config_path, classes_path)
 
-# read the input image
-img = cv2.imread(image_path)
+    # load the image
+    image_path = 'path/to/image/file'
+    image = cv2.imread(image_path)
 
-# create an instance of the BarcodeScanner class
-scanner = BarcodeScanner()
+    # scan the groceries in the image
+    barcode_dict = grocery_scanner.scan_groceries(image)
 
-# perform barcode detection and scanning
-scanner.detect_barcodes(img)
-scanner.scan_barcodes()
+    # print the barcode values and their occurrences
+    for barcode, count in barcode_dict.items():
+        print(f'{barcode}: {count}')
 
-# display the output image with bounding boxes
-output_img = scanner.draw_bounding_boxes(img)
-cv2.imshow("Output Image", output_img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+if __name__ == '__main__':
+    main()

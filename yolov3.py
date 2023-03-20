@@ -18,7 +18,13 @@ class YoloDetector:
         with open(names_path, 'r') as f:
             self.classes = [line.strip() for line in f.readlines()]
         self.layer_names = self.net.getLayerNames()
-        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        # self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+
+        self.output_layers = []
+        out_layers = self.net.getUnconnectedOutLayers()
+        if len(out_layers) > 0:
+            self.output_layers = [self.layer_names[i[0] - 1] for i in out_layers]
+
 
     def detect_objects(self, img):
         """
@@ -139,5 +145,54 @@ class GroceryAnalyzer:
         return boxes, confidences, class_ids, barcode_values
 
 
-# if __name__ == '__main__':
-#     #
+class GroceryVisualizer:
+    """
+    Grocery Visualizer class
+    """
+    def __init__(self, grocery_analyzer):
+        """
+        Initialize the Grocery Visualizer
+        :param grocery_analyzer: Grocery Analyzer object
+        """
+        self.grocery_analyzer = grocery_analyzer
+
+    def visualize_grocery_items(self, img):
+        """
+        Visualize grocery items in the input image
+        :param img: Input image
+        :return: img
+        """
+        boxes, confidences, class_ids, barcode_values = self.grocery_analyzer.analyze_grocery_items(img)
+        indexes = cv2.dnn.NMSBoxes(boxes, confidences, 0.5, 0.4)
+        font = cv2.FONT_HERSHEY_PLAIN
+        colors = np.random.uniform(0, 255, size=(len(boxes), 3))
+        for i in range(len(boxes)):
+            if i in indexes:
+                x, y, w, h = boxes[i]
+                label = str(barcode_values[i])
+                color = colors[i]
+                cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+                cv2.putText(img, label, (x, y + 30), font, 3, color, 3)
+        return img
+
+
+def main():
+    """
+    Main function
+    :return: None
+    """
+    yolo_detector = YoloDetector('darknet\cfg\yolov3.cfg', 'yolov3.weights', 'darknet\data\coco.names')
+    barcode_detector = BarcodeDetector()
+    grocery_detector = GroceryDetector(yolo_detector, barcode_detector)
+    grocery_analyzer = GroceryAnalyzer(grocery_detector)
+    grocery_visualizer = GroceryVisualizer(grocery_analyzer)
+
+    img = cv2.imread('images/grocery.jpg')
+    img = grocery_visualizer.visualize_grocery_items(img)
+    cv2.imshow('Image', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    main()
+
