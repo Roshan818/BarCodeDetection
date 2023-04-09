@@ -9,7 +9,7 @@ model = torch.hub.load("ultralytics/yolov5", "yolov5s", pretrained=True)
 model.conf = 0.5  # set confidence threshold
 
 # read the input image
-img = cv2.imread("BarCodeDetection/sample/missing barcode/IMG_20220303_174028.jpg")
+img = cv2.imread("D:/Mowito/BarCodeDetection/sample/allbarcode/IMG_20220303_173846.jpg")
 
 # perform YOLOv5 object detection
 results = model(img)

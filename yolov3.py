@@ -18,7 +18,7 @@ class YoloDetector:
         with open(names_path, 'r') as f:
             self.classes = [line.strip() for line in f.readlines()]
         self.layer_names = self.net.getLayerNames()
-        # self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
+        self.output_layers = [self.layer_names[i[0] - 1] for i in self.net.getUnconnectedOutLayers()]
 
         self.output_layers = []
         out_layers = self.net.getUnconnectedOutLayers()
@@ -181,7 +181,7 @@ def main():
     Main function
     :return: None
     """
-    yolo_detector = YoloDetector('darknet\cfg\yolov3.cfg', 'yolov3.weights', 'darknet\data\coco.names')
+    yolo_detector = YoloDetector('D:/Mowito/darknet/cfg/yolov3.cfg', 'D:/Mowito/yolov3.weights', 'D:/Mowito/darknet/data/coco.names')
     barcode_detector = BarcodeDetector()
     grocery_detector = GroceryDetector(yolo_detector, barcode_detector)
     grocery_analyzer = GroceryAnalyzer(grocery_detector)

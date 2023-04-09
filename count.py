@@ -58,7 +58,8 @@ for contour in contours:
         cv2.rectangle(image, (x, y), (x + w, y + h), BLACK, 2)
 
 # Display the input image with bounding boxes
-cv2.imshow("Grocery Items", image)
+res = cv2.resize(image, (800, 600))
+cv2.imshow("Grocery Items", res)
 cv2.waitKey(0)
 
 # Print barcode values and their count

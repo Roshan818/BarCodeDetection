@@ -4,8 +4,8 @@ from barcode_scanner import GroceryScanner
 def main():
     # initialize the grocery scanner
     model_path = 'yolov5s.pt'
-    config_path = 'path/to/config/file'
-    classes_path = 'path/to/classes/file'
+    config_path = 'D:/Mowito/yolov5/data/coco.names'
+    classes_path = 'D:/Mowito/yolov5/models/yolov5s.yaml'
     grocery_scanner = GroceryScanner(model_path, config_path, classes_path)
 
     # load the image

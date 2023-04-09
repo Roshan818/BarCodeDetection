@@ -36,7 +36,34 @@ The output contains the following information:
 
 ### Sample Output Image
 
-<img src ="sample\allbarcode\IMG_20220303_173846.jpg" height = 350>
+#### Basic Pyzbar
+
+<img src ="output\basic_pyzbar_terminal.png">
+<img src ="output\basic_pyzbar.png">
+
+---
+
+#### Counting
+
+<img src ="output\count_terminal.png">
+<img src ="output\count.png">
+
+---
+
+#### OpenCv
+
+<img src ="output\opencv_filters_terminal.png">
+<img src ="output\opencv_filters_barcode.png">
+<img src ="output\opencv_filters_obj0.png">
+
+---
+
+#### YoloV5
+
+<img src ="output\yolo_v5_terminal.png">
+<img src ="output\yolo_v5_obj0.png">
+<img src ="output\yolov5_obj1.png">
+<img src ="output\yolov5_obj2.png">
 
 ---
 
